@@ -1,0 +1,16 @@
+version: 2
+
+seeds:
+  - name: campaigns
+    description: "Raw campaign data with semicolon-separated format"
+    config:
+      quote_columns: false
+      column_types:
+        "campaign_id;channel;campaign_name;start_date;end_date;budget": varchar
+        
+  - name: leads
+    description: "Raw leads data with semicolon-separated format"
+    config:
+      quote_columns: false
+      column_types:
+        "lead_id;campaign_id;created_at;lead_type": varchar

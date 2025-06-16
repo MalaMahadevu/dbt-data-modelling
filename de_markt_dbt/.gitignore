@@ -1,0 +1,5 @@
+# dbt specific
+target/
+dbt_packages/
+logs/
+.vscode/

@@ -1,0 +1,29 @@
+# DBT artifacts
+dbt_modules/
+dbt_packages/
+logs/
+target/
+manifest.json
+run_results.json
+profiles.yml
+
+# Python files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# VSCode settings
+.vscode/y
