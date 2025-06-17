@@ -1,6 +1,6 @@
 # Project Structure
 #### de_markt_dbt/
-
+´´´
 
 ├── models/
 │   ├── staging/          # Raw data cleaning
@@ -15,7 +15,7 @@
 ├── seeds/               # Source CSV files
 ├── dbt_project.yml      # Project config
 └── dev.duckdb         # The Database
-
+´´´
 ## Setup
 ### Installation
 
