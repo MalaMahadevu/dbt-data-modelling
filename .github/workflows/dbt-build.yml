@@ -19,10 +19,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dbt
-        run: pip install dbt-core dbt-postgres
-
-      - name: Install DBT using Nix
-        uses: CedricLeong/install-dbt-action-nix@v1
+        run: pip install -r requirements.txt
 
       - name: Run dbt build
         run: dbt build
