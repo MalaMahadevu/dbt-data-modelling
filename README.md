@@ -1,5 +1,7 @@
 # Project Structure
 #### de_markt_dbt/
+
+
 ├── models/
 │   ├── staging/          # Raw data cleaning
 |        ├──stg_leads.sql
@@ -34,7 +36,6 @@ dbt run --select staging
 dbt docs generate
 dbt docs serve
 
-```bash
 
 ```markdown
 # Data Modeling Explained
@@ -58,10 +59,18 @@ dim_campaigns: Provides context for analysis
 
 fct_daily_leads: Track performance over time
 
-### Which campaigns had the highest conversion rate per channel?
+### Which campaigns had the highest conversion rate per channel
 ´´´sql
+SELECT 
+  c.channel,
+  c.campaign_name,
+  SUM(f.lead_count) AS total_leads_generated
+FROM fct_daily_leads f
+JOIN dim_campaigns c ON f.campaign_id = c.campaign_id
+GROUP BY c.channel, c.campaign_name
+ORDER BY c.channel, total_leads_generated DESC
 
-### How many leads were generated per day over time?
+### How many leads were generated per day over time
 ´´´sql
 SELECT 
   date,
