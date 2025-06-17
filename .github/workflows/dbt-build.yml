@@ -10,6 +10,7 @@ jobs:
   dbt-build:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -34,3 +35,6 @@ jobs:
       - name: Run dbt test
         run: dbt test
         working-directory: ./de_markt_dbt
+
+      - name: Success message
+        run: echo "dbt build and test completed successfully!"  
