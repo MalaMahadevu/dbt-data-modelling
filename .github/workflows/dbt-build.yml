@@ -1,0 +1,31 @@
+name: dbt Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  dbt-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dbt
+        run: pip install dbt-core dbt-postgres
+
+      - name: Run dbt build
+        run: dbt build
+        working-directory: ./de_markt_dbt
+
+      - name: Run dbt test
+        if: ${{ github.event.inputs.run_tests == 'true' }}
+        run: dbt test
+        working-directory: ./de_markt_dbt

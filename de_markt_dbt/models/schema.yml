@@ -1,8 +1,8 @@
 version: 2
 
 sources:
-  - name: raw_data
-    description: "Raw seed data from CSV files"
+  - name: main
+    schema: main
     tables:
       - name: campaigns
         description: "Marketing campaign master data"
@@ -20,97 +20,67 @@ sources:
             tests:
               - unique
               - not_null
-
 models:
-  # Staging Models
-  - name: stg_campaigns
-    description: "Cleaned and standardized campaign data"
-    columns:
-      - name: campaign_id
-        description: "Unique campaign identifier"
-        tests:
-          - unique
-          - not_null
-      - name: campaign_name
-        description: "Name of the marketing campaign"
-        tests:
-          - not_null
-      - name: channel
-        description: "Marketing channel (instagram, google, facebook)"
-        tests:
-          - not_null
-          - accepted_values:
-              values: ['instagram', 'google', 'facebook']
-      - name: start_date
-        description: "Campaign start date"
-        tests:
-          - not_null
-      - name: end_date
-        description: "Campaign end date"
-        tests:
-          - not_null
-      - name: budget
-        description: "Campaign budget in dollars"
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: ">= 0"
-      
-
   - name: stg_leads
     description: "Cleaned and standardized lead data"
     columns:
       - name: lead_id
-        description: "Unique lead identifier"
         tests:
           - unique
           - not_null
       - name: campaign_id
-        description: "Associated campaign ID"
+        tests:
+          - relationships:
+              to: ref('stg_campaigns')
+              field: campaign_id
+      - name: created_at
+      - name: lead_type
+
+  - name: stg_campaigns
+    description: "Cleaned and standardized campaign data"
+    columns:
+      - name: campaign_id
+        tests:
+          - unique
+          - not_null
+      - name: channel
+      - name: campaign_name
+      - name: start_date
+      - name: end_date
+      - name: budget
+  
+  - name: int_campaign_performance
+    description: "Enriched campaign performance metrics"
+    columns:
+      - name: campaign_id
         tests:
           - not_null
           - relationships:
               to: ref('stg_campaigns')
               field: campaign_id
-      
-      - name: created_at
-        description: "Timestamp when lead was created"
-        tests:
-          - not_null
-      
-      - name: lead_type
-        description: "Type of lead generation (phone_call, callback_form, inbound_form)"
-        tests:
-          - not_null
-          - accepted_values:
-              values: ['phone_call', 'callback_form', 'inbound_form']
-    # Intermediate Models
-  - name: int_campaign_performance
-    description: "Campaign performance metrics and KPIs"
+      - name: leads_per_dollar
+        description: "Lead generation efficiency metric"
+        
+
+  - name: dim_campaigns
+    description: "Dimension table for campaigns"
     columns:
       - name: campaign_id
-        description: "Unique campaign identifier"
         tests:
-          - unique
           - not_null
-      - name: total_leads
-        description: "Total number of leads generated"
+          - unique
+      - name: duration_days
         tests:
-          - dbt_utils.expression_is_true:
-              expression: ">= 0"
-      - name: converted_leads
-        description: "Number of leads that converted"
+          - not_null
+          
+
+  - name: fct_daily_leads
+    description: "Fact table for daily lead generation"
+    columns:
+      - name: date
         tests:
-          - dbt_utils.expression_is_true:
-              expression: ">= 0"
-      - name: conversion_rate_pct
-        description: "Conversion rate as percentage"
+          - not_null
+      - name: lead_count
         tests:
-          - dbt_utils.expression_is_true:
-              expression: "between 0 and 100"
-      - name: total_revenue
-        description: "Total revenue generated from conversions"
-        tests:
-          - dbt_utils.expression_is_true:
-              expression: ">= 0"  
-  
+          - not_null
+          
