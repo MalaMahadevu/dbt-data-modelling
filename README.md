@@ -78,12 +78,33 @@ GROUP BY c.channel, c.campaign_name
 ORDER BY c.channel, total_leads_generated DESC;
 ```
 
-#### How many leads were generated per day over time
+#### Which channels consistently drove high-quality leads
 ```sql
-SELECT 
-    date,
-    SUM(lead_count) AS total_leads_generated
-FROM fct_daily_leads
-GROUP BY date
-ORDER BY date;
+SELECT channel, SUM(lead_count) AS total_leads, ROUND(AVG(hot_lead_ratio)*100, 1) AS avg_hot_rate FROM main_dm_marts.fct_daily_leads GROUP BY channel ORDER BY avg_hot_rate DESC;
+```
+
+```markdown
+┌───────────┬─────────────┬──────────────┐
+│  channel  │ total_leads │ avg_hot_rate │
+│  varchar  │   int128    │    double    │
+├───────────┼─────────────┼──────────────┤
+│ Facebook  │          13 │         76.9 │
+│ LinkedIn  │          24 │         58.3 │
+│ YouTube   │          10 │         50.0 │
+│ Instagram │          30 │         46.7 │
+│ Google    │          23 │         40.9 │
+└───────────┴─────────────┴──────────────┘
+```
+#### Campaigns launched per quarter
+```sql
+SELECT start_quarter, COUNT(*) AS campaigns_launched, GROUP_CONCAT(campaign_name) AS campaign_list FROM main_dm_marts.dim_campaigns GROUP BY start_quarter ORDER BY start_quarter;
+```
+```markdown
+┌───────────────┬────────────────────┬──────────────────────────────────────────────────────────────────────────────────────────┐
+│ start_quarter │ campaigns_launched │                                      campaign_list                                       │
+│     int64     │       int64        │                                         varchar                                          │
+├───────────────┼────────────────────┼──────────────────────────────────────────────────────────────────────────────────────────┤
+│             1 │                 65 │ Kampagne 2,Kampagne 3,Kampagne 5,Kampagne 6,Kampagne 7,Kampagne 8,Kampagne 9,Kampagne .  │
+│             2 │                 35 │ Kampagne 0,Kampagne 1,Kampagne 4,Kampagne 10,Kampagne 11,Kampagne 15,Kampagne 16,Kampa.  │
+└───────────────┴────────────────────┴──────────────────────────────────────────────────────────────────────────────────────────┘
 ```
