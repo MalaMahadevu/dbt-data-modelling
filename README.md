@@ -1,7 +1,6 @@
 # Project Structure
 #### de_markt_dbt/
-´´´
-
+```markdown
 ├── models/
 │   ├── staging/          # Raw data cleaning
 |        ├──stg_leads.sql
@@ -15,11 +14,12 @@
 ├── seeds/               # Source CSV files
 ├── dbt_project.yml      # Project config
 └── dev.duckdb         # The Database
-´´´
+
 ## Setup
 ### Installation
 
-```bash
+```markdown
+```sql
 # 
 pip install dbt-core 
 pip install dbt-duckdb
@@ -35,7 +35,7 @@ dbt run --select staging
 #View documentation
 dbt docs generate
 dbt docs serve
-
+```bash
 
 ```markdown
 # Data Modeling Explained
@@ -59,8 +59,9 @@ dim_campaigns: Provides context for analysis
 
 fct_daily_leads: Track performance over time
 
+```sql
 ### Which campaigns had the highest conversion rate per channel
-´´´sql
+
 SELECT 
   c.channel,
   c.campaign_name,
@@ -71,7 +72,7 @@ GROUP BY c.channel, c.campaign_name
 ORDER BY c.channel, total_leads_generated DESC
 
 ### How many leads were generated per day over time
-´´´sql
+
 SELECT 
   date,
   SUM(lead_count) AS total_leads_generated
