@@ -21,11 +21,13 @@ jobs:
       - name: Install dbt
         run: pip install dbt-core dbt-postgres
 
+      - name: Install DBT using Nix
+        uses: CedricLeong/install-dbt-action-nix@v1
+
       - name: Run dbt build
         run: dbt build
         working-directory: ./de_markt_dbt
 
       - name: Run dbt test
-        if: ${{ github.event.inputs.run_tests == 'true' }}
         run: dbt test
         working-directory: ./de_markt_dbt
